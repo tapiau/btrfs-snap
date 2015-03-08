@@ -1,0 +1,36 @@
+#!/bin/bash
+
+NOW=`date +%Y%m%d-%H%M%S`
+
+if [ "$1" != "" ]; then
+        if [ "$1" == "--help" ]; then
+	    echo "--help"
+	    echo "--all - shows all snaps in all filesystems"
+	    echo "--list mountpoint - shows snaps"
+	    echo "mountpoint - do snapshot!"
+        elif [ "$1" == "--all" ]; then
+                for MOUNT in `mount -t btrfs | cut -d' ' -f3`; do
+
+                        snap "${MOUNT}"
+
+                        for SUBVOL in `btrfs subvol list ${MOUNT} | grep -v ' .snap/' | grep -v '/.snap/' | cut -d' ' -f9`; do
+                                snap "${MOUNT}/${SUBVOL}"
+                        done
+                done
+        elif [ "$1" == "--list" ]; then
+		if [ "$2" != "" ]; then
+			if [ "$2" != ""]; then
+		                btrfs subvolume list $2 | cut -d' ' -f9 | grep '.snap/' | sort
+			else
+				echo "Missing mount path"
+			fi
+		else
+			echo "Missing mount path"
+		fi
+        else
+                mkdir -p $1/.snap
+                btrfs subvolume snapshot -r $1 $1/.snap/ro-${NOW}
+        fi
+else
+        echo "Missing param"
+fi
