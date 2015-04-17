@@ -1,0 +1,13 @@
+#!/bin/bash
+
+LAST=`ls /data/backup/animal/ | sort | tail -n 1`;
+
+echo "Local last='${LAST}'";
+
+NEXT=`ssh 10.10.105.222 ls /data/backuppc/.snap/ | sort | grep -A 1 "${LAST}" | tail -n 1`
+echo "Remote next='${NEXT}'"
+
+ssh 10.10.105.222 "mkdir /data/transfer/${NEXT}"
+ssh 10.10.105.222 "cd /data/transfer/${NEXT}; btrfs send -p /data/backuppc/.snap/${LAST} /data/backuppc/.snap/${NEXT} | split -a 6 -b 1000M - ${NEXT}.chunk_ ; md5sum * >${NEXT}.md5"
+
+#btrfs send /data/backuppc/.snap/ro-20150216-231701 | split -a 6 -b 1000M - ro-20150216-231701.chunk_
