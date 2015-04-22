@@ -5,7 +5,7 @@ NOW=`date +%Y%m%d-%H%M%S`
 if [ "$1" != "" ]; then
         if [ "$1" == "--help" ]; then
 	    echo "--help"
-	    echo "--all - shows all snaps in all filesystems"
+	    echo "--all do snaps in all filesystems"
 	    echo "--list mountpoint - shows snaps"
 	    echo "mountpoint - do snapshot!"
         elif [ "$1" == "--all" ]; then
