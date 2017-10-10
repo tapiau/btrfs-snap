@@ -13,14 +13,13 @@ if [ "$1" != "" ]; then
 
                         snap "${MOUNT}"
 
-                        for SUBVOL in `btrfs subvol list ${MOUNT} | grep -v ' .snap/' | grep -v '/.snap/' | cut -d' ' -f9`; do
+                        for SUBVOL in `btrfs subvol list ${MOUNT} | grep -v ' .snap/' | grep -v '.snap/' | cut -d' ' -f9`; do
                                 snap "${MOUNT}/${SUBVOL}"
                         done
                 done
         elif [ "$1" == "--list" ]; then
 		if [ "$2" != "" ]; then
-#			btrfs subvolume list -o $2 | cut -d' ' -f9 | grep '/.snap/' | sort
-			btrfs subvolume list $2 | cut -d' ' -f9 | grep '/.snap/' | sort
+			btrfs subvolume list -r $2 | cut -d' ' -f9 | grep '.snap/' | sort
 		else
 			echo "Missing mount path"
 		fi
