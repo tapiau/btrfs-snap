@@ -1,0 +1,23 @@
+#!/usr/bin/php
+<?php
+
+$snapFolder = "/.snap/";
+$backupFolder = "/backup/";
+
+$list = glob($snapFolder."/*");
+
+sort($list);
+
+$snapNameParent = array_shift($list);
+$snapNameParent = explode('/',$snapNameParent);
+$snapNameParent = array_pop($snapNameParent);
+
+$snapName = array_shift($list);
+$snapName = explode('/',$snapName);
+$snapName = array_pop($snapName);
+
+$exe = "btrfs send -p {$snapFolder}/{$snapNameParent} {$snapFolder}/{$snapName} > {$backupFolder}/{$snapNameParent}_{$snapName}.btrfs";
+
+echo $exe.PHP_EOL;
+
+`{$exe}`;
