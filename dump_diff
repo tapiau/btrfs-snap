@@ -20,4 +20,4 @@ $exe = "btrfs send -p {$snapFolder}/{$snapNameParent} {$snapFolder}/{$snapName} 
 
 echo $exe.PHP_EOL;
 
-`{$exe}`;
+`time {$exe}`;

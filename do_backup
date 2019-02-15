@@ -1,0 +1,25 @@
+#!/usr/bin/php
+<?php
+
+$snapFolder = "/.snap/";
+$backupFolder = "/backup/";
+
+$list = glob($snapFolder."/*");
+sort($list);
+
+`snap /`;
+`./dump_diff`;
+
+$list = glob($snapFolder."/*");
+sort($list);
+
+if(count($list)>1)
+{
+        $snapNameParent = array_shift($list);
+        $snapNameParent = explode('/',$snapNameParent);
+        $snapNameParent = array_pop($snapNameParent);
+
+        $exe = "btrfs subvolume delete {$snapFolder}/{$snapNameParent}";
+        echo $exe.PHP_EOL;
+	`{$exe}`;
+}
